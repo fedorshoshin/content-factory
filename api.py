@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from clients import praw_client
+from services import reddit_wrapper
+from services import speech_synthesizer
 import main
 
 app = FastAPI()
@@ -9,10 +10,19 @@ app = FastAPI()
 def read_root():
     return {"Hello": "World"}
 
+
 @app.get("/conv")
 def get_conversation():
     return main.make_conversation_short()
-@app.get("/comments")
 
+
+@app.get("/comments")
 def get_comments():
-    return praw_client.get_comments()
+    return reddit_wrapper.get_comments()
+
+
+@app.get("/tts")
+def test_tts():
+    print('enter your text')
+    text = input()
+    speech_synthesizer.text_to_speech(text, "result")

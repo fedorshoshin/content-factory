@@ -1,9 +1,5 @@
 import praw
 import os
-import dotenv
-
-dotenv.load_dotenv()
-
 
 def __get_reddit_client():
     reddit = praw.Reddit(

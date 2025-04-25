@@ -1,16 +1,18 @@
-from clients import praw_client
-import data_converter
+from services import reddit_wrapper
+from services.data_converter import DataConverter
+from services import speech_synthesizer
+import os
+import dotenv
+
+dotenv.load_dotenv()
 
 
 def make_conversation_short():
-    response = praw_client.get_comments()
-    texts = data_converter.string_to_txt("conversation", response['comments'])
-    result = []
-    for text in texts:
-        result.append(open(text, "r", encoding="utf-8").read())
+    conversation = reddit_wrapper.get_comments()
+    clean_text = DataConverter.clear_html(conversation['comments'])
 
-    return {
-        "url": response['url'],
-        "title": response['title'],
-        "comments": result
-    }
+    speech_synthesizer.text_to_speech(clean_text, "record")
+
+
+def make_survey_short():
+    answers = reddit_wrapper.get_comments()
